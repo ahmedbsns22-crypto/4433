@@ -1,0 +1,79 @@
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#000;overflow:hidden;font-family:'Tajawal','Cairo','Noto Kufi Arabic',system-ui,sans-serif}
+#stage{position:relative;margin:0 auto;width:min(100vw,56.25vh);height:min(100vh,177.78vw);overflow:hidden;
+  container-type:size;background:#0a0a0b;direction:rtl;color:#fff;contain:strict}
+@supports(height:1dvh){#stage{width:min(100vw,56.25dvh);height:min(100dvh,177.78vw)}}
+
+/* start overlay */
+#start{position:fixed;inset:0;z-index:9;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;
+  background:#0a0a0b;color:#ece4d4;cursor:pointer}
+#start b{font:900 44px Georgia,serif;letter-spacing:4px}
+#start span{font-size:20px;opacity:.7}
+#start.hide{display:none}
+
+/* shots */
+.shot{position:absolute;inset:0;display:none;align-items:center;overflow:hidden;
+  background:radial-gradient(circle at 50% 50%,#2b2b30 0,#121214 55%,#08080a 100%)}
+.shot.on{display:flex;animation:sin .35s cubic-bezier(.2,.8,.2,1) both}
+@keyframes sin{from{opacity:0;transform:translate3d(var(--sx,0),0,0)}to{opacity:1;transform:none}}
+.shot::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:linear-gradient(#000a 0,#0000 24%,#0000 62%,#000b 100%)}
+
+/* camera */
+.cam{position:relative;flex:none;width:100%;aspect-ratio:var(--ar)}
+.cam img{display:block;width:100%;height:100%}
+.on .cam{animation:cam var(--dur) cubic-bezier(.5,0,.2,1) both}
+@keyframes cam{
+ 0%{transform:translate3d(calc((.5 - var(--x0))*var(--s0)*100%),calc((.5 - var(--y0))*var(--s0)*100%),0) scale(var(--s0))}
+ 60%{transform:translate3d(calc((.5 - var(--xm))*var(--sm)*100%),calc((.5 - var(--ym))*var(--sm)*100%),0) scale(var(--sm))}
+ 100%{transform:translate3d(calc((.5 - var(--x1))*var(--s1)*100%),calc((.5 - var(--y1))*var(--s1)*100%),0) scale(var(--s1))}}
+
+/* text */
+.t{position:absolute;z-index:2;left:0;right:0;padding:0 6cqw;text-align:center;font-weight:800;line-height:1.25;
+  font-size:8cqw;text-shadow:0 2px 12px #000c;opacity:0;direction:rtl}
+.on .t{animation:tin .7s cubic-bezier(.2,.8,.2,1) var(--d) both}
+.t.big{font-size:12.5cqw;font-weight:900}
+.t.xl{font-size:17cqw;font-weight:900}
+.t.sm{font-size:6cqw;font-weight:500;color:#d6d3cc}
+.t.ltr{direction:ltr;unicode-bidi:plaintext;letter-spacing:.5cqw;font-size:13cqw;font-weight:900}
+.t.brand{font:900 11cqw Georgia,serif;letter-spacing:1.5cqw;direction:ltr;color:#ece4d4}
+@keyframes tin{from{opacity:0;transform:translate3d(var(--dx,0),var(--dy,0),0) scale(.94)}to{opacity:1;transform:none}}
+.on .t.sw{animation:tin .25s cubic-bezier(.2,.8,.2,1) var(--d) both,tout .18s ease-in var(--e) forwards}
+@keyframes tout{to{opacity:0;transform:translate3d(0,-30px,0)}}
+.on .t.pop{animation:pop .9s cubic-bezier(.2,.9,.2,1) var(--d) both}
+@keyframes pop{0%{opacity:0;transform:scale(2.2)}55%{opacity:1;transform:scale(1.15)}100%{opacity:1;transform:scale(1)}}
+
+/* hand-drawn underline + micro zoom on hero word */
+.h{position:relative;display:inline-block;color:#fff;padding:0 .08em}
+.on .h{animation:mz .7s ease-out var(--ud) both}
+@keyframes mz{50%{transform:scale(1.1)}}
+.big2{font-size:1.2em;color:#ece4d4}
+.ul{position:absolute;left:-2%;right:-2%;bottom:-.22em;width:104%;height:.3em;overflow:visible}
+.ul path{fill:none;stroke:#e6d8bb;stroke-width:3.4;stroke-linecap:round;vector-effect:non-scaling-stroke;
+  stroke-dasharray:1;stroke-dashoffset:1}
+.on .ul path{animation:draw .55s cubic-bezier(.5,0,.2,1) var(--ud) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* dimension lines (inside camera layer) */
+.ln{position:absolute;background:#e6d8bb;opacity:0}
+.ln.x{left:0;width:100%;top:106%;height:.5cqw;transform-origin:0 50%}
+.ln.y{left:105%;top:0;height:100%;width:.5cqw;transform-origin:50% 0}
+.ln.z{left:101%;top:106%;width:12%;height:.5cqw;transform-origin:0 50%;rotate:-38deg}
+.on .ln{animation:lin .7s cubic-bezier(.5,0,.2,1) var(--d) both}
+.ln.y{--k:y}.ln.z{--k:z}
+@keyframes lin{from{opacity:1;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+
+/* check mark */
+.chk{position:absolute;z-index:2;left:50%;top:86%;width:16cqw;margin-left:-8cqw}
+.chk path{fill:none;stroke:#e6d8bb;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.on .chk path{animation:draw .6s ease-out var(--d) forwards}
+
+/* water drops */
+.drop{position:absolute;z-index:1;top:-4%;left:var(--l);width:1.6cqw;height:2.6cqw;border-radius:50% 50% 55% 55%;
+  background:#cfe3f0aa;opacity:0}
+.on .drop{animation:fall 1.5s ease-in var(--dl) infinite}
+@keyframes fall{0%{opacity:0;transform:translate3d(0,0,0)}15%{opacity:.8}100%{opacity:0;transform:translate3d(0,95cqh,0)}}
+
+/* logo */
+.logo{position:absolute;z-index:2;left:50%;top:4.5%;width:12cqw;margin-left:-6cqw;opacity:0}
+.on .logo{animation:tin .8s cubic-bezier(.2,.8,.2,1) .2s both}
